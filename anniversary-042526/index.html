@@ -71,6 +71,38 @@
         font-weight: 600;
       }
 
+      .gate-panel {
+        position: relative;
+      }
+
+      .fireworks {
+        position: absolute;
+        inset: -8px;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .firework {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        left: var(--x, 50%);
+        top: var(--y, 50%);
+        transform: translate(-50%, -50%) scale(0.2);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle, rgba(255, 255, 255, 1) 0 20%, rgba(160, 215, 255, 0.9) 45%, rgba(92, 145, 255, 0.15) 75%, transparent 76%);
+        opacity: 0;
+        box-shadow:
+          0 0 12px rgba(157, 211, 255, 0.85),
+          0 0 26px rgba(112, 175, 255, 0.45);
+      }
+
+      .fireworks.active .firework {
+        animation: firework-burst 0.9s ease-out forwards;
+        animation-delay: var(--d, 0s);
+      }
+
       .hidden {
         display: none;
       }
@@ -196,6 +228,21 @@
         100% { opacity: 0; transform: translateY(-42px) scale(1.15); }
       }
 
+      @keyframes firework-burst {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.2);
+        }
+        20% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(2.2);
+        }
+      }
+
       @media (max-width: 600px) {
         body {
           align-items: flex-start;
@@ -245,16 +292,25 @@
   </head>
   <body>
     <main class="card">
-      <div id="gate-view" class="hidden">
-        <h1>Please enter our anniversary date (ddmmyy)</h1>
-        <form id="gate-form">
-          <input id="passcode" inputmode="numeric" maxlength="6" placeholder="ddmmyy" required />
-          <button type="submit">Enter</button>
-        </form>
-        <p id="error-message"></p>
+      <div id="gate-view">
+        <div class="gate-panel">
+          <h1>Please enter our anniversary date (ddmmyy)</h1>
+          <form id="gate-form">
+            <input id="passcode" inputmode="numeric" maxlength="6" placeholder="ddmmyy" required />
+            <button type="submit">Enter</button>
+          </form>
+          <p id="error-message"></p>
+          <div id="fireworks" class="fireworks" aria-hidden="true">
+            <span class="firework" style="--x: 14%; --y: 28%; --d: 0.05s;"></span>
+            <span class="firework" style="--x: 30%; --y: 62%; --d: 0.2s;"></span>
+            <span class="firework" style="--x: 50%; --y: 20%; --d: 0.35s;"></span>
+            <span class="firework" style="--x: 70%; --y: 58%; --d: 0.5s;"></span>
+            <span class="firework" style="--x: 86%; --y: 32%; --d: 0.65s;"></span>
+          </div>
+        </div>
       </div>
 
-      <div id="approved-view">
+      <div id="approved-view" class="hidden">
         <div class="rose-wrap">
           <div class="bouquet">
             <div class="bouquet-glow"></div>
@@ -298,6 +354,7 @@
       const errorMessage = document.getElementById("error-message");
       const gateView = document.getElementById("gate-view");
       const approvedView = document.getElementById("approved-view");
+      const fireworks = document.getElementById("fireworks");
       const expectedPasscode = "250426";
 
       gateForm.addEventListener("submit", (event) => {
@@ -305,9 +362,20 @@
         const value = passcodeInput.value.trim();
 
         if (value === expectedPasscode) {
-          gateView.classList.add("hidden");
-          approvedView.classList.remove("hidden");
           errorMessage.textContent = "";
+          fireworks.classList.remove("active");
+          void fireworks.offsetWidth;
+          fireworks.classList.add("active");
+          passcodeInput.disabled = true;
+          gateForm.querySelector("button").disabled = true;
+
+          setTimeout(() => {
+            gateView.classList.add("hidden");
+            approvedView.classList.remove("hidden");
+            fireworks.classList.remove("active");
+            passcodeInput.disabled = false;
+            gateForm.querySelector("button").disabled = false;
+          }, 1100);
           return;
         }
 

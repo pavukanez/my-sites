@@ -4,7 +4,7 @@ Frontend multi-site workspace where each site is an independent top-level folder
 
 ## Structure
 
-- `anniversary/`: complete codebase for the anniversary site
+- `anniversary-042526/`: complete codebase for the anniversary site
 - `experiment/`: complete codebase for the experiment site
 - `active-site.yaml`: controls which site GitHub Pages deploys
 
@@ -14,16 +14,16 @@ Frontend multi-site workspace where each site is an independent top-level folder
 2. Set:
 
 ```yaml
-active_site: anniversary
+active_site: anniversary-042526
 ```
 
-Use a top-level folder name from this repository (for example `anniversary` or `experiment`).
+Use a top-level folder name from this repository (for example `anniversary-042526` or `experiment`).
 
 ## Local preview (before pushing)
 
 Open any site directly in your browser:
 
-- Right-click `anniversary/index.html` and choose open in browser
+- Right-click `anniversary-042526/index.html` and choose open in browser
 - Right-click `experiment/index.html` and choose open in browser
 
 This is independent from deployment selection in `active-site.yaml`.

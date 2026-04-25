@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anniversary 04-25-26</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        background: radial-gradient(circle at top, #162448, #070b17 65%);
+        color: #eaf1ff;
+        overflow: hidden;
+      }
+
+      .card {
+        width: min(94vw, 680px);
+        background: rgba(9, 16, 38, 0.75);
+        border: 1px solid rgba(150, 180, 255, 0.25);
+        border-radius: 18px;
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(6px);
+        padding: 2rem;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 0.6rem;
+        font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+      }
+
+      p {
+        margin: 0.4rem 0;
+      }
+
+      form {
+        margin-top: 1.4rem;
+        display: flex;
+        gap: 0.65rem;
+        justify-content: center;
+      }
+
+      input {
+        width: 220px;
+        border: 1px solid #6287d8;
+        background: #0d1631;
+        color: #f2f6ff;
+        border-radius: 10px;
+        padding: 0.68rem 0.8rem;
+        font-size: 1rem;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 0.68rem 1rem;
+        background: linear-gradient(135deg, #4f83ff, #79a8ff);
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      #error-message {
+        margin-top: 0.8rem;
+        min-height: 1.25rem;
+        color: #ff6f7f;
+        font-weight: 600;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .rose-wrap {
+        margin-top: 1.4rem;
+        position: relative;
+        min-height: 320px;
+      }
+
+      .bouquet {
+        position: relative;
+        width: min(92vw, 380px);
+        height: 320px;
+        margin: 0 auto;
+      }
+
+      .bouquet-photo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(94vw, 382px);
+        height: auto;
+        transform: translate(-50%, -53%) scale(1);
+        z-index: 3;
+        object-fit: contain;
+        filter:
+          drop-shadow(0 22px 28px rgba(6, 16, 46, 0.52))
+          drop-shadow(0 0 20px rgba(98, 157, 255, 0.23));
+        animation: bouquet-grow 4.8s ease-in-out infinite;
+      }
+
+      .bouquet-glow {
+        position: absolute;
+        left: 50%;
+        bottom: 44px;
+        width: 220px;
+        height: 62px;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(126, 176, 255, 0.26), rgba(126, 176, 255, 0) 72%);
+        filter: blur(6px);
+        animation: glow-pulse 4.8s ease-in-out infinite;
+      }
+
+      .message-arch {
+        margin: -6rem auto 0;
+        width: min(96vw, 460px);
+        display: block;
+      }
+
+      .message-arch text {
+        fill: #d5ffff;
+        text-anchor: middle;
+        letter-spacing: 0.4px;
+        text-shadow: 0 0 12px rgba(95, 153, 255, 0.45);
+      }
+
+      .message-arch .line1 {
+        font-size: clamp(16px, 2.3vw, 21px);
+        font-weight: 700;
+      }
+
+      .message-arch .line2 {
+        font-size: clamp(14px, 2vw, 18px);
+        font-weight: 600;
+      }
+
+      .message-arch .line3 {
+        font-size: clamp(13px, 1.8vw, 16px);
+        font-weight: 600;
+        opacity: 0.95;
+      }
+
+      .heart {
+        position: absolute;
+        color: rgba(170, 200, 255, 0.9);
+        font-size: 16px;
+        opacity: 0;
+        animation: drift 3.8s ease-in infinite;
+      }
+
+      .h1 { left: 16%; bottom: 20px; animation-delay: 0.3s; }
+      .h2 { left: 47%; bottom: 10px; animation-delay: 1.3s; }
+      .h3 { left: 78%; bottom: 18px; animation-delay: 2.1s; }
+
+      .sparkle {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #b4d6ff;
+        filter: blur(0.5px);
+        opacity: 0;
+        animation: sparkle 2.4s linear infinite;
+      }
+
+      .sparkle.s1 { left: 18px; top: 30px; animation-delay: 0.2s; }
+      .sparkle.s2 { left: 120px; top: 4px; animation-delay: 1.3s; }
+      .sparkle.s3 { right: 22px; top: 28px; animation-delay: 2s; }
+      .sparkle.s4 { left: 76px; top: 156px; animation-delay: 0.8s; }
+      .sparkle.s5 { right: 84px; top: 150px; animation-delay: 2.3s; }
+
+      @keyframes bouquet-grow {
+        0%, 100% { transform: translate(-50%, -53%) scale(1); }
+        50% { transform: translate(-50%, -55%) scale(1.085); }
+      }
+
+      @keyframes glow-pulse {
+        0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.75; }
+        50% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+      }
+
+      @keyframes sparkle {
+        0% { opacity: 0; transform: translateY(10px) scale(0.6); }
+        35% { opacity: 1; }
+        100% { opacity: 0; transform: translateY(-24px) scale(1); }
+      }
+
+      @keyframes drift {
+        0% { opacity: 0; transform: translateY(0) scale(0.9); }
+        30% { opacity: 1; }
+        100% { opacity: 0; transform: translateY(-42px) scale(1.15); }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          align-items: flex-start;
+          padding: 1rem 0.75rem;
+        }
+
+        .card {
+          width: 100%;
+          padding: 1.1rem 0.9rem 1.25rem;
+          border-radius: 14px;
+        }
+
+        h1 {
+          font-size: 1.32rem;
+          line-height: 1.3;
+        }
+
+        form {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.55rem;
+        }
+
+        input, button {
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .rose-wrap {
+          min-height: 290px;
+        }
+
+        .bouquet {
+          height: 300px;
+        }
+
+        .bouquet-photo {
+          width: min(97vw, 354px);
+        }
+
+        .message-arch {
+          width: 100%;
+          margin-top: -1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div id="gate-view" class="hidden">
+        <h1>Please enter our anniversary date (ddmmyy)</h1>
+        <form id="gate-form">
+          <input id="passcode" inputmode="numeric" maxlength="6" placeholder="ddmmyy" required />
+          <button type="submit">Enter</button>
+        </form>
+        <p id="error-message"></p>
+      </div>
+
+      <div id="approved-view">
+        <div class="rose-wrap">
+          <div class="bouquet">
+            <div class="bouquet-glow"></div>
+            <img
+              class="bouquet-photo"
+              src="./blue-rose-bouquet.png"
+              alt="Blue rose bouquet"
+            />
+            <span class="sparkle s1"></span>
+            <span class="sparkle s2"></span>
+            <span class="sparkle s3"></span>
+            <span class="sparkle s4"></span>
+            <span class="sparkle s5"></span>
+            <span class="heart h1">❤</span>
+            <span class="heart h2">❤</span>
+            <span class="heart h3">❤</span>
+          </div>
+          <svg class="message-arch" viewBox="0 0 460 180" aria-label="Anniversary message">
+            <defs>
+              <path id="arch-1" d="M 30 64 Q 230 114 430 64" />
+              <path id="arch-2" d="M 70 96 Q 230 138 390 96" />
+              <path id="arch-3" d="M 105 128 Q 230 160 355 128" />
+            </defs>
+            <text class="line1">
+              <textPath href="#arch-1" startOffset="50%">Happy one-year anniversary to us</textPath>
+            </text>
+            <text class="line2">
+              <textPath href="#arch-2" startOffset="50%">🐯🐮 Thao Nguyen 🐯🐮</textPath>
+            </text>
+            <text class="line3">
+              <textPath href="#arch-3" startOffset="50%">25-04-2026</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const gateForm = document.getElementById("gate-form");
+      const passcodeInput = document.getElementById("passcode");
+      const errorMessage = document.getElementById("error-message");
+      const gateView = document.getElementById("gate-view");
+      const approvedView = document.getElementById("approved-view");
+      const expectedPasscode = "250426";
+
+      gateForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const value = passcodeInput.value.trim();
+
+        if (value === expectedPasscode) {
+          gateView.classList.add("hidden");
+          approvedView.classList.remove("hidden");
+          errorMessage.textContent = "";
+          return;
+        }
+
+        errorMessage.textContent = "wrong passcode, please try again";
+      });
+    </script>
+  </body>
+</html>

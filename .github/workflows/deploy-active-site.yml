@@ -1,0 +1,64 @@
+name: Deploy Active Site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve active site from YAML
+        id: active
+        shell: bash
+        run: |
+          ACTIVE_SITE="$(awk -F: '/^[[:space:]]*active_site[[:space:]]*:/ {gsub(/["'"'"'[:space:]]/, "", $2); print $2}' active-site.yaml)"
+
+          if [ -z "$ACTIVE_SITE" ]; then
+            echo "active-site.yaml must contain: active_site: <site-folder>" >&2
+            exit 1
+          fi
+
+          if [ ! -d "$ACTIVE_SITE" ]; then
+            echo "Configured site does not exist: $ACTIVE_SITE" >&2
+            exit 1
+          fi
+
+          echo "site=$ACTIVE_SITE" >> "$GITHUB_OUTPUT"
+          echo "Active site: $ACTIVE_SITE"
+
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp -R "${{ steps.active.outputs.site }}/." _site/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

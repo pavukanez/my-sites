@@ -312,9 +312,9 @@
     <main class="card">
       <div id="gate-view">
         <div class="gate-panel">
-          <h1>Please enter our anniversary date (ddmmyy)</h1>
+          <h1>Please enter our anniversary date<br>(4-digit)</h1>
           <form id="gate-form">
-            <input id="passcode" inputmode="numeric" maxlength="6" placeholder="ddmmyy" required />
+            <input id="passcode" inputmode="numeric" maxlength="4" placeholder="e.g. 2412 as in December 24" required />
             <button type="submit">Enter</button>
           </form>
           <p id="error-message"></p>
@@ -373,7 +373,7 @@
       const gateView = document.getElementById("gate-view");
       const approvedView = document.getElementById("approved-view");
       const fireworks = document.getElementById("fireworks");
-      const expectedPasscode = "250426";
+      const expectedPasscode = "2504";
 
       gateForm.addEventListener("submit", (event) => {
         event.preventDefault();
